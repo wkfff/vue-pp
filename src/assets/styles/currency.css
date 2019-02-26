@@ -99,37 +99,44 @@ a:focus {
 
 .el-menu,
 .el-dropdown-menu__item--divided:before,
-.el-menu--horizontal>.el-menu-item:not(.is-disabled):focus,
-.el-menu--horizontal>.el-menu-item:not(.is-disabled):hover,
-.el-menu--horizontal>.el-submenu .el-submenu__title:hover {
+.el-dropdown-menu__item>.el-menu-item:not(.is-disabled):focus,
+.el-dropdown-menu__item>.el-menu-item:not(.is-disabled):hover,
+.el-dropdown-menu__item>.el-submenu .el-submenu__title:hover {
     border-color: #1e1e1e;
     background: #1e1e1e;
     margin: 0;
 }
-.el-select-dropdown__list{
+
+.el-select-dropdown__list {
     padding: 0;
 }
+
 .el-dropdown-menu__item {
     margin: 0;
     /* color: #fff; */
 }
-.el-popper[x-placement^="bottom"]{
+
+.el-popper[x-placement^="bottom"] {
     margin-top: 3px;
 }
-.el-select-dropdown{
+
+.el-select-dropdown {
     overflow: hidden;
 }
+
 /* 表单 */
-.el-form-item__label{
+.el-form-item__label {
     font-size: 12px;
     /* color: #fff; */
 }
-.el-input{
+
+.el-input {
     background: #101010
 }
-.el-input__inner{
+
+.el-input__inner {
     height: 24px !important;
-    padding: 0 12px; 
+    padding: 0 12px;
     border-radius: 0;
     background: none;
     border: none;
@@ -137,13 +144,16 @@ a:focus {
     color: #fff;
     resize: none;
 }
-.el-select-dropdown__item.selected{
+
+.el-select-dropdown__item.selected {
     font-weight: normal
 }
-.el-select-dropdown__empty{
+
+.el-select-dropdown__empty {
     padding: 0;
     line-height: 25px;
 }
+
 /* 表格 */
 .el-table {
     font-size: 12px;
@@ -226,11 +236,11 @@ a:focus {
 }
 
 /* 时间 */
-.el-picker-panel{
+.el-picker-panel {
     background: #282828
 }
 
-.el-input--suffix .el-input__inner{
+.el-input--suffix .el-input__inner {
     padding-right: 20px;
 }
 
@@ -238,7 +248,7 @@ a:focus {
 
 
 /* .el-tree */
-.el-tree{
+.el-tree {
     background: #282828
 }
 
@@ -289,6 +299,8 @@ section {
     border-left: 2px solid #1c1c1c !important
 }
 
+.is-checked,
+.is-active,
 .menu_item:focus,
 .menu_item:hover,
 .menu_item_active {
@@ -313,4 +325,36 @@ h3.title {
     font-weight: normal;
     padding-left: 15px;
     /* flex: 1; */
+}
+
+
+
+
+
+
+/* el-radio */
+.el-radio__input.is-checked .el-radio__inner {
+    border-color: #585757;
+    background: #1e1e1e;
+    box-shadow: none !important
+}
+
+label,
+.el-radio__inner {
+    box-shadow: none !important
+}
+
+
+/* el-date-table */
+.el-date-table td.next-month,
+.el-date-table td.prev-month {
+    color: #545454;
+}
+
+.el-date-table td.current:not(.disabled) span {
+    background-color: #880b13;
+}
+
+.el-date-table td.available:hover {
+    color: #409EFF;
 }

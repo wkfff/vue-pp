@@ -4,7 +4,7 @@
 
     <div class="el-main is-vertical">
       <div class>
-        <filterHTML/>
+        <filterHTML ref="filterChild"/>
       </div>
       <div class="el-main">
         <el-table
@@ -13,7 +13,7 @@
           :max-height="tableHeight"
           border
           style="width: 100%"
-          v-if="filter.sortBy == ''"
+          v-if="filterSortBy() == ''"
         >
           <el-table-column prop="thumbnail" label="缩略图" width="100" empty-text=" 1">
             <template scope="scope">
@@ -57,7 +57,7 @@
           :row-class-name="tableRowClassName"
           element-loading-text=" "
           style="width: 100%"
-          v-if="filter.sortBy != ''"
+          v-if="filterSortBy() != ''"
         >
           <el-table-column type="expand" width="20">
             <template slot-scope="props">
@@ -118,6 +118,11 @@
 </template>
 
 
+<style scoped>
+tbody .el-input {
+  background: none;
+}
+</style>
 
 <script>
 import filterHTML from "./filter.vue";
@@ -136,37 +141,17 @@ export default {
       popperOptions: {
         boundariesElement: "madeByMe"
       },
-      tableHeight: window.innerHeight,
-      filter: {
-        projectID: "",
-        workID: "",
-        lev1ID: "",
-        lev2ID: "",
-        pipelineID: "",
-        status: "",
-        startDate: "",
-        endDate: "",
-        key: "",
-        sortBy: "projectName#asc",
-        orderBy: "startDate#desc",
-        isAssetOrShot: "",
-        groupSortBy: "",
-        groupBy: "",
-        page: "1",
-        pageSize: "50"
-      }
+      tableHeight: window.innerHeight
     };
   },
-  mounted() {
-    console.log(this);
-    console.log(this.projectList);
-  },
+  mounted() {},
   created() {},
   methods: {
     onInfinite($state) {
       let that = this;
       let filter = {};
-      _.forEach(that.filter, function(value, key) {
+      let filterChild = that.$refs.filterChild;
+      _.forEach(filterChild.filter, function(value, key) {
         if (value == 0) {
           filter[key] = "";
         } else {
@@ -180,11 +165,11 @@ export default {
         .then(response => {
           if ("SUCCESS" === response.result) {
             let data = response.data;
-            if (that.filter.page == 1) {
+            if (filterChild.filter.page == 1) {
               console.log(data);
               that.TaskList = data;
             } else {
-              if (that.filter["sortBy"] == "") {
+              if (filterChild.filter["sortBy"] == "") {
                 that.TaskList = that.TaskList.concat(response.data);
               } else {
                 _.forEach(data, function(value1, key1) {
@@ -202,11 +187,11 @@ export default {
 
             let recordsTotal =
               response.recordsTotal >=
-              this.filter["page"] * this.filter["pageSize"]
+              filterChild.filter["page"] * filterChild.filter["pageSize"]
                 ? true
                 : false;
             if (recordsTotal) {
-              this.filter.page++;
+              filterChild.filter.page++;
               $state.loaded();
             } else {
               $state.complete();
@@ -221,6 +206,16 @@ export default {
             type: "error"
           });
         });
+    },
+    filterSortBy() {
+      let sortBy;
+      try {
+        sortBy = this.$refs.filterChild.filter.sortBy;
+      } catch (error) {
+        sortBy = "";
+      } 
+      console.log(sortBy);
+      return sortBy;
     },
     tableRowClassName({ row, rowIndex }) {
       return "expanded-row";

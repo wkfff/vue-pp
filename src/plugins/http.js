@@ -63,8 +63,6 @@ axios.interceptors.request.use(config => {
         showFullScreenLoading()
     }
 
-
-
     config.method === 'post' ?
         config.data = qs.stringify({
             ...config.data
@@ -74,7 +72,7 @@ axios.interceptors.request.use(config => {
         };
 
     if (localStorage.ticket) {
-        config.headers['Authorization'] = 'Bearer 34e6d2ef96c46ce28cb1f9b28db56326';
+        config.headers['Authorization'] = 'Bearer 594a28b1adf775ace533bba61fb3d329';
         // config.headers['Authorization'] = 'Bearer '+localStorage.ticket; 
     }
     if (localStorage.projectId) {
@@ -100,6 +98,7 @@ axios.interceptors.response.use(
         }
     },
     error => { //响应错误处理
+        tryHideFullScreenLoading();
         return Promise.reject(error)
     }
 );
