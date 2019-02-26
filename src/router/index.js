@@ -3,10 +3,11 @@ import Router from 'vue-router'
 
 import logIn from '../lgoin.vue'
 
-const home = () => import( /* webpackChunkName: "group-foo" */ '../home.vue')
-const myTask = () => import( /* webpackChunkName: "group-foo" */ '../views/myTask/myTask.vue')
-const madeByMe = () => import( /* webpackChunkName: "group-foo" */ '../views/myTask/madeByMe.vue')
-const schedule = () => import( /* webpackChunkName: "group-foo" */ '../views/myTask/schedule.vue')
+// const home = () => import( /* webpackChunkName: "group-foo" */ '../home.vue')
+const home = () => import( /* webpackChunkName: "home" */ '../home.vue')
+const myTask = () => import( /* webpackChunkName: "myTask" */ '../views/myTask/myTask.vue')
+const madeByMe = () => import( /* webpackChunkName: "madeByMe" */ '../views/myTask/madeByMe.vue')
+const schedule = () => import( /* webpackChunkName: "schedule" */ '../views/myTask/schedule.vue')
 
 
 

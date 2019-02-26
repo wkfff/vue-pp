@@ -11,18 +11,18 @@ import router from './router'
 import store from './store'
 
 
-import http from './plugins/http.js'
+import axios from './axios'
 import global from './plugins/Global.js'
 
 
 
 
 
-import './plugins/element.js'
+import './element-ui'
 
 
 Vue.config.productionTip = false;
-Vue.prototype.AXIOS = http.axios;
+Vue.prototype.AXIOS = axios.axios;
 Vue.prototype.GLOBAL = global;
 
 
@@ -32,6 +32,6 @@ new Vue({
   // render: h => h(content)
   router,
   methods: {
-    
+
   }
 }).$mount('#app')
