@@ -1,0 +1,47 @@
+/* 改变主题色变量 */
+$--color-primary: #eaeaea;
+
+/* 改变 icon 字体路径变量，必需 */
+$--font-path: '~element-ui/lib/theme-chalk/fonts';
+
+$--size-base: 12px !default;
+
+$--font-size-base: 12px !default;
+$--font-size-small: 12px !default;
+$--font-size-large: 18px !default;
+
+$--color-text-primary: #fff !default;
+$--color-text-regular: #fff !default;
+$--color-text-placeholder: #fff !default;
+
+
+
+$--background-color-base: #323232 !default;
+
+$--selected-hover: #880b13 !important;
+
+
+
+$--border-color-base: #101010 !default;
+$--border-color-light: #101011 !default;
+$--border-color-lighter: #101012 !default;
+$--border-color-extra-light: #101013 !default;
+
+
+
+
+// select
+$--select-option-hover-background: $--selected-hover !default;
+$--select-dropdown-background: $--background-color-base !default;
+
+$--checkbox-bordered-mini-height: 20px !default;
+
+$--select-option-height: 25px !default;
+
+$--input-small-font-size: 12px !default;
+$--input-small-height: 24px !default;
+
+$--input-mini-font-size: 12px !default;
+$--input-mini-height: 20px !default;
+
+@import "~element-ui/packages/theme-chalk/src/index";
