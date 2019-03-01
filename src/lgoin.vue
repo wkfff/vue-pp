@@ -44,33 +44,23 @@ export default {
   },
   methods: {
     auth() {
-      this.$router.push({
-        path: "/home/madeByMe",
-        query: { url: "findMyTask", title: "由我制作", static: 0 }
-      });
       var formData = {
         username: this.userName,
         password: md5(this.password)
       };
-      this.AXIOS.post(this.GLOBAL.ServerUrl + "/authenticate", formData)
-        .then(response => {
+      this.AXIOS.post("/authenticate", formData, { qs: true }).then(
+        response => {
           if (response.result === "SUCCESS") {
             this.user = response.data;
             localStorage.user = JSON.stringify(this.user);
             localStorage.ticket = this.user.ticket;
-            this.$router.push({
-              path: "/home/madeByMe",
-              query: { url: "findMyTask", title: "由我制作", static: 0 }
-            });
           }
-        })
-        .catch(error => {
-          this.$message({
-            showClose: true,
-            message: error,
-            type: "error"
+          this.$router.push({
+            path: "/home/madeByMe",
+            query: { url: "findMyTask", title: "由我制作", static: 0 }
           });
-        });
+        }
+      );
     }
   }
 };

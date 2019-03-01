@@ -24,7 +24,7 @@
           <el-form-item label="来源">
             <el-select
               v-model="filter.workID"
-              @change="findPipelineByWork();findByParent(0);"
+              @change="findPipelineByWork();findByParent(0);fn_filter()"
               placeholder="全部"
             >
               <el-option
@@ -36,7 +36,11 @@
             </el-select>
           </el-form-item>
           <el-form-item label="一级分类">
-            <el-select v-model="filter.lev1ID" @change="lev2ListTree()" placeholder="全部">
+            <el-select
+              v-model="filter.lev1ID"
+              @change="lev2ListTree();fn_filter()"
+              placeholder="全部"
+            >
               <el-option
                 v-for="lev1 in lev1List"
                 :key="lev1.name"
@@ -60,7 +64,7 @@
             </div>
           </div>
           <el-form-item label="工序">
-            <el-select v-model="filter.pipelineID" placeholder="全部">
+            <el-select v-model="filter.pipelineID" @change="fn_filter()" placeholder="全部">
               <el-option
                 v-for="pipeline in pipelineList"
                 :key="pipeline.pipilename"
@@ -70,7 +74,7 @@
             </el-select>
           </el-form-item>
           <el-form-item label="状态">
-            <el-select v-model="filter.status" placeholder="全部">
+            <el-select v-model="filter.status" @change="fn_filter()" placeholder="全部">
               <el-option
                 v-for="project in projectList"
                 :key="project.name"
@@ -85,6 +89,7 @@
               placeholder="选择日期"
               v-model="filter.startDate"
               style="width: 100%;"
+              @change="fn_filter()"
             ></el-date-picker>
           </el-form-item>
           <el-form-item label="截止时间">
@@ -93,10 +98,11 @@
               placeholder="选择日期"
               v-model="filter.endDate"
               style="width: 100%;"
+              @change="fn_filter()"
             ></el-date-picker>
           </el-form-item>
           <el-form-item label="关键词">
-            <el-input v-model="filter.key"></el-input>
+            <el-input v-model="filter.key" @change="fn_filter()"></el-input>
           </el-form-item>
         </el-form>
       </el-dropdown-menu>
@@ -108,14 +114,41 @@
         <i class="el-icon-arrow-down el-icon--right"></i>
       </span>
       <el-dropdown-menu slot="dropdown" class="filter_radio">
-        <el-radio-group v-model="radio1" size="mini">
-          <el-radio-button class="menu_item" label="asc" @change="fn_filter()">升序排列</el-radio-button>
-          <el-radio-button class="menu_item border_B" label="desc" @change="fn_filter()">降序排列</el-radio-button>
+        <el-radio-group v-model="radio1" @change="changeFilter('orderBy',radio1,radio)" size="mini">
+          <el-radio-button
+            class="menu_item"
+            label="asc"
+            
+          >升序排列</el-radio-button>
+          <el-radio-button
+            class="menu_item border_B"
+            label="desc"
+          >降序排列</el-radio-button>
         </el-radio-group>
-        <el-radio class="menu_item" v-model="radio" label="startDate" @change="fn_filter()">时间</el-radio>
-        <el-radio class="menu_item" v-model="radio" label="pipelineName" @change="fn_filter()">工序</el-radio>
-        <el-radio class="menu_item" v-model="radio" label="linkName" @change="fn_filter()">对象</el-radio>
-        <el-radio class="menu_item" v-model="radio" label="status" @change="fn_filter()">状态</el-radio>
+        <el-radio
+          class="menu_item"
+          v-model="radio"
+          label="startDate"
+          @change="changeFilter('orderBy',radio1,radio)"
+        >时间</el-radio>
+        <el-radio
+          class="menu_item"
+          v-model="radio"
+          label="pipelineName"
+          @change="changeFilter('orderBy',radio1,radio)"
+        >工序</el-radio>
+        <el-radio
+          class="menu_item"
+          v-model="radio"
+          label="linkName"
+          @change="changeFilter('orderBy',radio1,radio)"
+        >对象</el-radio>
+        <el-radio
+          class="menu_item"
+          v-model="radio"
+          label="status"
+          @change="changeFilter('orderBy',radio1,radio)"
+        >状态</el-radio>
       </el-dropdown-menu>
     </el-dropdown>
 
@@ -125,13 +158,33 @@
         <i class="el-icon-arrow-down el-icon--right"></i>
       </span>
       <el-dropdown-menu slot="dropdown" class="filter_radio">
-        <el-radio-group v-model="radio2" size="mini">
-          <el-radio-button class="menu_item" label="asc" @change="fn_filter()">升序排列</el-radio-button>
-          <el-radio-button class="menu_item border_B" label="desc" @change="fn_filter()">降序排列</el-radio-button>
-          <el-radio-button class="menu_item border_B" label="取消分组" @change="fn_filter()">取消分组</el-radio-button>
+        <el-radio-group v-model="radio2" @change="changeFilter('sortBy',radio2,radio3)" size="mini">
+          <el-radio-button
+            class="menu_item"
+            label="asc"
+          >升序排列</el-radio-button>
+          <el-radio-button
+            class="menu_item border_B"
+            label="desc"
+          >降序排列</el-radio-button>
+          <el-radio-button
+            class="menu_item border_B"
+            label="取消分组"
+            
+          >取消分组</el-radio-button>
         </el-radio-group>
-        <el-radio class="menu_item" v-model="radio3" label="projectName" @change="fn_filter()">项目</el-radio>
-        <el-radio class="menu_item" v-model="radio3" label="status" @change="fn_filter()">状态</el-radio>
+        <el-radio
+          class="menu_item"
+          v-model="radio3"
+          label="projectName"
+          @change="changeFilter('sortBy',radio2,radio3)"
+        >项目</el-radio>
+        <el-radio
+          class="menu_item"
+          v-model="radio3"
+          label="status"
+          @change="changeFilter('sortBy',radio2,radio3)"
+        >状态</el-radio>
       </el-dropdown-menu>
     </el-dropdown>
   </div>

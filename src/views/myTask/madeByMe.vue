@@ -12,10 +12,11 @@
           element-loading-text=" "
           :max-height="tableHeight"
           border
+          empty-text=" "
           style="width: 100%"
-          v-if="filterSortBy() == ''"
+          v-show="filterSortBy() == ''"
         >
-          <el-table-column prop="thumbnail" label="缩略图" width="100" empty-text=" 1">
+          <el-table-column prop="thumbnail" label="缩略图" width="100" >
             <template scope="scope">
               <img :src="'http://192.168.100.236:9009'+scope.row.thumbnail" alt>
             </template>
@@ -41,7 +42,7 @@
           <template slot="append">
             <infinite-loading
               ref="infiniteLoading"
-              :distance="distance"
+              :identifier="infiniteId"
               @infinite="onInfinite"
               forceUseInfiniteWrapper=".el-table__body-wrapper"
             >
@@ -55,9 +56,10 @@
           :data="TaskList"
           :max-height="tableHeight"
           :row-class-name="tableRowClassName"
+          :default-expand-all="true"
           element-loading-text=" "
           style="width: 100%"
-          v-if="filterSortBy() != ''"
+          v-show="filterSortBy() != ''" 
         >
           <el-table-column type="expand" width="20">
             <template slot-scope="props">
@@ -66,8 +68,9 @@
                 element-loading-text=" "
                 style="width: 100%"
                 :show-header="false"
+                empty-text=" "
               >
-                <el-table-column prop="thumbnail" label="缩略图" width="100" empty-text=" 1">
+                <el-table-column prop="thumbnail" label="缩略图" width="100" >
                   <template scope="scope">
                     <img :src="'http://192.168.100.236:9009'+scope.row.thumbnail" alt>
                   </template>
@@ -103,7 +106,7 @@
           <template slot="append">
             <infinite-loading
               ref="infiniteLoading"
-              :distance="distance"
+              :identifier="infiniteId"
               @infinite="onInfinite"
               forceUseInfiniteWrapper=".el-table__body-wrapper"
             >

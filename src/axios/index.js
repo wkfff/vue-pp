@@ -1,9 +1,11 @@
 import {
-    Loading
+    Loading,
+    Message
 } from 'element-ui'
 import axios from 'axios'
 import qs from "qs";
 import _ from "lodash";
+import global from '../plugins/Global.js'
 
 
 let loading
@@ -46,7 +48,7 @@ function tryHideFullScreenLoading() {
 
 
 axios.defaults.timeout = 10000;
-// axios.defaults.baseURL = 'http://192.168.100.236:9009';
+axios.defaults.baseURL = global.ServerUrl;
 
 
 axios.defaults.paramsSerializer = (params) => {
@@ -58,31 +60,38 @@ axios.defaults.paramsSerializer = (params) => {
 
 /****** request拦截器==>对请求参数做处理 ******/
 axios.interceptors.request.use(config => {
-
     if (!config.showLoading) {
         showFullScreenLoading()
     }
-
-    config.method === 'post' ?
-        config.data = qs.stringify({
-            ...config.data
-        }) :
-        config.params = {
-            ...config.params
-        };
+    if (config.qs) {
+        config.method === 'post' ?
+            config.data = qs.stringify({
+                ...config.data
+            }) :
+            config.params = {
+                ...config.params
+            };
+        config.headers['Content-Type'] = 'application/x-www-form-urlencoded;charset=utf-8';
+    } else {
+        config.headers['Content-Type'] = 'application/json;charset=UTF-8';
+    }
 
     if (localStorage.ticket) {
-        config.headers['Authorization'] = 'Bearer 594a28b1adf775ace533bba61fb3d329';
+        config.headers['Authorization'] = 'Bearer 90427caecd359bebe20fdfa4596bfe43';
         // config.headers['Authorization'] = 'Bearer '+localStorage.ticket; 
     }
     if (localStorage.projectId) {
         config.headers['project_id'] = localStorage.projectId;
     }
-    // config.headers['Content-Type'] = 'application/x-www-form-urlencoded';
-    config.headers['Content-Type'] = 'application/x-www-form-urlencoded;charset=utf-8';
 
     return config;
 }, error => { //请求错误处理
+    tryHideFullScreenLoading();
+    Message({
+        showClose: true,
+        message: error,
+        type: "error"
+    });
     Promise.reject(error)
 });
 
@@ -91,14 +100,19 @@ axios.interceptors.response.use(
     response => { //成功请求到数据
         tryHideFullScreenLoading()
         //这里根据后端提供的数据进行对应的处理
-        if (response.data.result === 'SUCCESS') {
-            return response.data;
-        } else {
-            return response.data;
-        }
+        // if (response.data.result === 'SUCCESS') {
+        //     return response.data;
+        // } else {
+        return response.data;
+        // }
     },
     error => { //响应错误处理
         tryHideFullScreenLoading();
+        Message({
+            showClose: true,
+            message: error,
+            type: "error"
+        });
         return Promise.reject(error)
     }
 );

@@ -22,7 +22,7 @@ const data = {
         startDate: "",
         endDate: "",
         key: "",
-        sortBy: "projectName#asc",
+        sortBy: "",
         orderBy: "startDate#desc",
         isAssetOrShot: "",
         groupSortBy: "",
@@ -34,19 +34,31 @@ const data = {
         children: "child",
         label: "fname"
     },
-    radio1: "asc",
+    radio1: "desc",
     radio: "startDate",
     radio2: "取消分组",
-    radio3: ""
+    radio3: "projectName"
 }
 
 
 
 
 const methods = {
+    changeFilter(k, v1, v2) {
+        let that = this;
+        if (v1 == '取消分组') {
+            that.filter[k] = ''
+        } else {
+            that.filter[k] = v2 + '#' + v1
+        }
+        that.fn_filter();
+    },
     fn_filter() {
         this.filter.page = 1;
-        this.$parent.$refs.infiniteLoading.$emit("$onInfinite:resetreset");
+        this.$nextTick(() => {
+            this.$parent.TaskList = [];
+            this.$parent.infiniteId += 1;
+        });
     },
     // 业务列表
     WorkFindMyCharge() {
@@ -54,57 +66,46 @@ const methods = {
         if (that.filter.projectID == 0) return false;
 
         that.workList = [];
-        that.filter.workID = "全部";
+        that.filter.workID = "";
         that.lev1List = [];
-        that.filter.lev1ID = "全部";
+        that.filter.lev1ID = "";
         that.lev2List = [];
         that.lev2Name = "全部";
+        that.filter.lev2ID = '';
         that.pipelineList = [];
-        that.pipelineID = "全部";
+        that.filter.pipelineID = "";
 
-        that.AXIOS.get(
-                that.GLOBAL.ServerUrl +
-                "/Work/findAll?projectID=" +
-                that.filter.projectID
-            )
+        that.AXIOS.get("/Work/findAll", {
+                params: {
+                    projectID: that.filter.projectID
+                }
+            })
             .then(response => {
                 if ("SUCCESS" === response.result) {
                     let data = response.data;
                     that.workList = data;
                 }
             })
-            .catch(error => {
-                this.$message({
-                    showClose: true,
-                    message: error,
-                    type: "error"
-                });
-            });
+
     },
 
     // 工序列表
     findPipelineByWork() {
         let that = this;
         this.pipelineList = [];
-        that.filter.pipelineID = "全部";
-        that.AXIOS.get(
-                that.GLOBAL.ServerUrl +
-                "/WorkflowNode/findPipelineByWork?workID=" +
-                that.filter.workID
-            )
+        that.filter.pipelineID = "";
+        that.AXIOS.get("/WorkflowNode/findPipelineByWork", {
+                params: {
+                    workID: that.filter.workID
+                }
+            })
             .then(response => {
                 if ("SUCCESS" === response.result) {
                     let data = response.data;
                     that.pipelineList = data;
                 }
             })
-            .catch(error => {
-                this.$message({
-                    showClose: true,
-                    message: error,
-                    type: "error"
-                });
-            });
+
     },
 
     // lev1 列表
@@ -119,9 +120,10 @@ const methods = {
         });
 
         that.lev1List = [];
-        that.filter.lev1ID = "全部";
+        that.filter.lev1ID = "";
         that.lev2List = [];
         that.lev2Name = "全部";
+        that.filter.lev2ID = '';
 
         let url = "";
         if (dataModel == 2) {
@@ -134,28 +136,19 @@ const methods = {
             return false;
         }
 
-        that.AXIOS.get(
-                that.GLOBAL.ServerUrl +
-                "/" +
-                url +
-                "/findByParent?pID=" +
-                pid +
-                "&projectID=" +
-                that.filter.projectID
-            )
+        that.AXIOS.get("/" + url + "/findByParent", {
+                params: {
+                    pID: pid,
+                    projectID: that.filter.projectID
+                }
+            })
             .then(response => {
                 if ("SUCCESS" === response.result) {
                     let data = response.data;
                     that.lev1List = data;
                 }
             })
-            .catch(error => {
-                this.$message({
-                    showClose: true,
-                    message: error,
-                    type: "error"
-                });
-            });
+
     },
 
     // lev1 列表
@@ -181,28 +174,19 @@ const methods = {
             that.lev2Name = "全部";
             return false;
         }
-        that.AXIOS.get(
-                that.GLOBAL.ServerUrl +
-                "/" +
-                url +
-                "/tree?pID=" +
-                pid +
-                "&projectID=" +
-                that.filter.projectID
-            )
+        that.AXIOS.get("/" + url + "/tree", {
+                params: {
+                    pID: pid,
+                    projectID: that.filter.projectID
+                }
+            })
             .then(response => {
                 if ("SUCCESS" === response.result) {
                     let data = response.data;
                     that.lev2List = data;
                 }
             })
-            .catch(error => {
-                this.$message({
-                    showClose: true,
-                    message: error,
-                    type: "error"
-                });
-            });
+
     },
     handleNodeClick(data) {
         this.filter.lev2ID = data.fid;

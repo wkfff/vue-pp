@@ -2,24 +2,19 @@ import filterHTML from "../../views/myTask/filter";
 import InfiniteLoading from "vue-infinite-loading";
 import _ from "lodash";
 
+const data = function (that) {
+    return {
+        title: that.$route.query.title,
+        url: that.$route.query.url,
+        TaskList: [],
+        infiniteId: +new Date(),
+        popperOptions: {
+            boundariesElement: "madeByMe"
+        },
+        tableHeight: window.innerHeight - 108,
 
-
-
-
-const data = {
-    title: this.$route.query.title,
-    url: this.$route.query.url,
-    TaskList: [],
-    distance: 100, //临界值，距离底部多少距离时触发函数  infiniteHandler
-    popperOptions: {
-        boundariesElement: "madeByMe"
-    },
-    tableHeight: window.innerHeight
+    }
 }
-
-
-
-
 
 const methods = {
     onInfinite($state) {
@@ -36,7 +31,7 @@ const methods = {
         let param = {
             filter: JSON.stringify(filter)
         };
-        that.AXIOS.post(that.GLOBAL.ServerUrl + "/Task/" + that.url, param)
+        that.AXIOS.post("/Task/" + that.url, param)
             .then(response => {
                 if ("SUCCESS" === response.result) {
                     let data = response.data;
@@ -72,14 +67,7 @@ const methods = {
                     }
                 }
             })
-            .catch(error => {
-                // $state.complete();
-                this.$message({
-                    showClose: true,
-                    message: error,
-                    type: "error"
-                });
-            });
+
     },
     filterSortBy() {
         let sortBy;
@@ -88,6 +76,7 @@ const methods = {
         } catch (error) {
             sortBy = "";
         }
+        console.log(sortBy)
         return sortBy;
     },
     tableRowClassName({
@@ -107,16 +96,24 @@ export default {
         InfiniteLoading
     },
     data() {
-        return data;
+        return data(this)
     },
     mounted() {},
     created() {},
     methods: methods,
     watch: {
-        $route(to, from) { 
+        $route(to, from) {
             this.title = this.$route.query.title;
             this.url = this.$route.query.url;
-            this.init();
+            this.$refs.filterChild.filter.page = 1;
+            this.TaskList = [];
+            this.infiniteId += 1;
+        },
+        infiniteId(newValue, oldValue) {
+            // console.log(newValue)
+            // console.log(oldValue)
+            // console.log(this)
+            // this.infiniteId = newValue;
         }
     }
 };

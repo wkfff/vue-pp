@@ -8,6 +8,13 @@ const home = () => import( /* webpackChunkName: "home" */ '../home.vue')
 const myTask = () => import( /* webpackChunkName: "myTask" */ '../views/myTask/myTask.vue')
 const madeByMe = () => import( /* webpackChunkName: "madeByMe" */ '../views/myTask/madeByMe.vue')
 const schedule = () => import( /* webpackChunkName: "schedule" */ '../views/myTask/schedule.vue')
+const projectManage = () => import( /* webpackChunkName: "projectManage" */ '../views/project/projectManage.vue')
+
+
+
+
+
+const project = () => import( /* webpackChunkName: "project" */ '../views/project/project.vue')
 
 
 
@@ -31,7 +38,7 @@ let router = new Router({
       name: 'home',
       component: home,
       children: [{
-        path: '',
+        path: 'myTask',
         component: myTask,
         children: [{
           path: 'madeByMe',
@@ -42,6 +49,14 @@ let router = new Router({
           name: 'schedule',
           component: schedule
         }]
+      }, {
+        path: 'projectManage',
+        name: 'projectManage',
+        component: projectManage,
+      }, {
+        path: 'project',
+        name: 'project',
+        component: project,
       }]
     }
   ]
@@ -57,7 +72,7 @@ router.beforeEach((to, from, next) => {
 
 
 // router.afterEach((to, from) => {
-  
+
 // })
 
 Vue.use(Router)
